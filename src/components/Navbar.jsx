@@ -12,7 +12,13 @@ const Navbar = ({ user, setUser }) => {
 
   return (
     <nav className="navbar navbar-dark bg-dark p-3 d-flex justify-content-between align-items-center">
-      <h1 className="text-white">MyShop</h1>
+      <h1
+        className="text-white"
+        style={{ cursor: "pointer" }} 
+        onClick={() => navigate("/")} 
+      >
+        MyShop
+      </h1>
       <div>
         {user ? (
           <div className="d-flex align-items-center">
