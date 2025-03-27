@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
 
 const Login = ({ setUser }) => {
   const [email, setEmail] = useState("");
@@ -63,7 +65,20 @@ const Login = ({ setUser }) => {
       localStorage.setItem("user", JSON.stringify(userData));
       setUser(userData);
 
-      alert("Tizimga muvaffaqiyatli kirdingiz!");
+      Swal.fire({
+        toast: true,
+        position: "top-end",
+        icon: "success",
+        title: "Tizimga muvaffaqiyatli kirdingiz!",
+        showConfirmButton: false,
+        timer: 5000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        }
+      });
+
       navigate("/");
     } catch (err) {
       setError(err.message);
