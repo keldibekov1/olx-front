@@ -9,6 +9,8 @@ import Home from "./pages/Home";
 import ProductDetail from "./pages/ProductDetail";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import Profile from "./pages/Profile";
+import Footer from "./components/Footer";
+
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -47,6 +49,7 @@ const App = () => {
         <Route path="/register-details" element={<RegisterDetails />} />
         <Route path="/profile" element={<Profile user={user} />} /> {/* 🟢 Profil sahifasi to‘g‘ri ishlaydi */}
       </Routes>
+      {/* <Footer />  🔥 Footer shu joyga qo‘shildi */}
     </Router>
   );
 };

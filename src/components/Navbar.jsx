@@ -47,7 +47,7 @@ const Navbar = ({ user, setUser }) => {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg bg-dark p-3">
+    <nav className="navbar navbar-expand-lg p-3" style={{ backgroundColor: "#3E3F5B" }}>
       <div className="container-fluid">
         <h1 className="text-white me-3" style={{ cursor: "pointer" }} onClick={() => navigate("/")}>
           MyShop
@@ -90,10 +90,10 @@ const Navbar = ({ user, setUser }) => {
           ))}
         </div>
 
-        {/* 🔥 Login, Logout va Savat */}
-        <div>
+        {/* 🔥 Login, Logout, Register va Savat */}
+        <div className="d-flex align-items-center">
           {user ? (
-            <div className="d-flex align-items-center">
+            <>
               <img
                 src={user.img}
                 alt="Profil"
@@ -110,11 +110,18 @@ const Navbar = ({ user, setUser }) => {
               <button className="btn btn-danger" onClick={handleLogout}>
                 Chiqish
               </button>
-            </div>
+            </>
           ) : (
-            <Link to="/login">
-              <button className="btn btn-light">Login</button>
-            </Link>
+            <>
+              <Link to="/register" className="me-2">
+                <button className="btn btn-success">Register</button>
+              </Link>
+              <Link to="/login">
+                <button className="btn" style={{ backgroundColor: "#F6F1DE" }}>
+                  Login
+                </button>
+              </Link>
+            </>
           )}
         </div>
       </div>
