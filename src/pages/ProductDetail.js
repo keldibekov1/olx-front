@@ -10,6 +10,7 @@ const ProductDetail = () => {
   const [comment, setComment] = useState("");
   const [star, setStar] = useState(5);
   const [isCommenting, setIsCommenting] = useState(false);
+  const [isLiking, setIsLiking] = useState(false);
 
   useEffect(() => {
     axios
@@ -23,6 +24,39 @@ const ProductDetail = () => {
         setLoading(false);
       });
   }, [id]);
+
+  const handleLike = async () => {
+    if (isLiking) return;
+    setIsLiking(true);
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Iltimos, avval tizimga kiring!");
+        return;
+      }
+
+      await axios.post(
+        "https://keldibekov.online/likes",
+        { productId: id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      setProduct((prev) => ({
+        ...prev,
+        totalLikes: (prev.totalLikes || 0) + 1,
+      }));
+    } catch (error) {
+      alert("Like bosishda xatolik!");
+    } finally {
+      setIsLiking(false);
+    }
+  };
 
   const handleCommentSubmit = async () => {
     if (isCommenting || !comment.trim()) return;
@@ -74,7 +108,6 @@ const ProductDetail = () => {
 
   return (
     <div style={{ display: "grid", gridTemplateColumns: "0.5fr 1fr", gap: "30px", padding: "40px", maxWidth: "900px", margin: "auto" }}>
-      {/* Chap tomon - Mahsulot ma'lumotlari */}
       <div style={{ background: "#fff", padding: "20px", borderRadius: "10px", boxShadow: "0 0 10px rgba(0,0,0,0.1)" }}>
         <h1 style={{ textAlign: "center", fontSize: "22px" }}>{product.name}</h1>
         <img
@@ -89,9 +122,26 @@ const ProductDetail = () => {
         </p>
         <p style={{ fontSize: "16px", color: "#555", marginTop: "10px" }}>📝 <strong>Tavsif:</strong> {product.description}</p>
         <p style={{ fontSize: "16px", color: "#555", marginTop: "10px" }}>👤 <strong>Mahsulot egasi:</strong> {product.user?.firstname} {product.user?.lastname} ({product.user?.email})</p>
+
+        {/* Like tugmasi */}
+        <div style={{ marginTop: "20px", textAlign: "center" }}>
+          <button
+            onClick={handleLike}
+            style={{
+              background: isLiking ? "#ccc" : "#4F959D",
+              color: "white",
+              border: "none",
+              padding: "10px 20px",
+              borderRadius: "5px",
+              cursor: isLiking ? "not-allowed" : "pointer",
+            }}
+            disabled={isLiking}
+          >
+            ❤️ Like ({product.totalLikes || 0})
+          </button>
+        </div>
       </div>
 
-      {/* O'ng tomon - Izohlar */}
       <div>
         <div style={{ background: "#fff", padding: "15px", borderRadius: "10px", boxShadow: "0 0 10px rgba(0,0,0,0.1)", marginBottom: "15px" }}>
           <h3 style={{ fontSize: "18px" }}>💬 Izoh qoldirish</h3>
@@ -139,28 +189,13 @@ const ProductDetail = () => {
           </button>
         </div>
 
-        {/* Izohlar qismi - Kattalashmasligi uchun max balandlik va scroll qo‘shildi */}
-        <div style={{ 
-          background: "#fff", 
-          padding: "15px", 
-          borderRadius: "10px", 
-          boxShadow: "0 0 10px rgba(0,0,0,0.1)", 
-          maxHeight: "300px",  // Maksimal balandlik qo‘shildi
-          overflowY: "auto" // Scroll qo‘shildi
-        }}>
+        <div style={{ background: "#fff", padding: "15px", borderRadius: "10px", boxShadow: "0 0 10px rgba(0,0,0,0.1)", maxHeight: "300px", overflowY: "auto" }}>
           <h3 style={{ fontSize: "18px" }}>💬 Izohlar</h3>
           {product.comments.length > 0 ? (
             product.comments.map((c, index) => (
               <div key={index} style={{ background: "#f8f8f8", padding: "8px", borderRadius: "5px", marginBottom: "8px" }}>
                 <strong>{c.user?.firstname || "Ism yo‘q"} {c.user?.lastname || ""}</strong>
                 <p>{c.text}</p>
-                <p style={{ fontSize: "18px", color: "#f39c12" }}>
-                  {[...Array(5)].map((_, i) => (
-                    <span key={i} style={{ color: i < c.star ? "#f39c12" : "#ddd" }}>
-                      ★
-                    </span>
-                  ))}
-                </p>
               </div>
             ))
           ) : (
