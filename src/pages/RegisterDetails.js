@@ -101,15 +101,66 @@ const RegisterDetails = () => {
         <h2 className="text-center mb-4">Profil ma’lumotlari</h2>
 
         <div className="text-center mb-3">
-          <label htmlFor="imageUpload" className="image-upload">
-            {preview ? (
-              <img src={preview} alt="Preview" className="img-thumbnail" width="100" />
-            ) : (
-              <span>📤 .jpg yoki .png yuklang</span>
-            )}
-          </label>
-          <input id="imageUpload" type="file" accept="image/*" onChange={handleImageChange} hidden />
-        </div>
+  <label htmlFor="imageUpload" className="image-upload" style={{ cursor: "pointer", position: "relative", display: "inline-block" }}>
+    {preview ? (
+      <img
+        src={preview}
+        alt="Profil rasmi"
+        className="img-thumbnail"
+        style={{
+          width: "120px",
+          height: "120px",
+          borderRadius: "50%", // 🔵 Doira shakli
+          objectFit: "cover",
+          border: "3px solid #007BFF",
+          transition: "transform 0.3s ease-in-out", // ✨ Animatsiya
+        }}
+        onMouseOver={(e) => (e.target.style.transform = "scale(1.1)")} // 🔄 Kattalashadi
+        onMouseOut={(e) => (e.target.style.transform = "scale(1)")} // 🔄 Asliga qaytadi
+      />
+    ) : (
+      <div
+        style={{
+          width: "120px",
+          height: "120px",
+          borderRadius: "50%",
+          background: "#f8f9fa",
+          border: "2px dashed #007BFF",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: "14px",
+          color: "#007BFF",
+          fontWeight: "bold",
+          transition: "background 0.3s ease-in-out",
+        }}
+        onMouseOver={(e) => (e.target.style.background = "#e9ecef")} // 🔄 Rangi o‘zgaradi
+        onMouseOut={(e) => (e.target.style.background = "#f8f9fa")}
+      >
+        📤 .jpg yoki .png yuklang
+      </div>
+    )}
+  </label>
+  <input id="imageUpload" type="file" accept="image/*" onChange={handleImageChange} hidden />
+
+  {/* 📌 Yangi tugma */}
+  <button
+    className="btn w-100 mt-2"
+    style={{
+      background: "#3E3F5B", // 🎨 Tugma rangi
+      color: "#fff",
+      fontWeight: "bold",
+      padding: "10px",
+      borderRadius: "8px",
+      transition: "background 0.3s",
+    }}
+    onMouseOver={(e) => (e.target.style.background = "#5a5c7a")}
+    onMouseOut={(e) => (e.target.style.background = "#3E3F5B")}
+  >
+    📂 Rasm tanlash
+  </button>
+</div>
+
 
         <input
           type="text"
@@ -144,9 +195,14 @@ const RegisterDetails = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button className="btn btn-primary w-100" onClick={handleRegister}>
+        <button
+          className="btn w-100"
+          onClick={handleRegister}
+          style={{ backgroundColor: "#3E3F5B", color: "#fff" }}
+        >
           Ro‘yxatdan o‘tish
         </button>
+
       </div>
     </div>
   );

@@ -8,15 +8,25 @@ const Login = ({ setUser }) => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  // Email validatsiya qilish uchun regex
+  const isValidEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
   const handleLogin = async () => {
     if (!email || !password) {
       setError("Email va parolni kiriting!");
       return;
     }
-  
+
+    if (!isValidEmail(email)) {
+      setError("Email noto‘g‘ri formatda!");
+      return;
+    }
+
     setLoading(true);
     setError(null);
-  
+
     try {
       const response = await fetch("https://keldibekov.online/auth/login", {
         method: "POST",
@@ -25,34 +35,34 @@ const Login = ({ setUser }) => {
         },
         body: JSON.stringify({ email, password }),
       });
-  
+
       const data = await response.json();
-  
+
       if (!response.ok) {
         throw new Error(data.message || "Xatolik yuz berdi!");
       }
-  
+
       // 🔥 Tokenni saqlash
       localStorage.setItem("token", data.token);
-  
+
       // 🔥 User ma’lumotlarini olish va saqlash
       const userRes = await fetch("https://keldibekov.online/auth/me", {
         method: "GET",
         headers: {
-          "Authorization": `Bearer ${data.token}`,
-          "Accept": "*/*",
+          Authorization: `Bearer ${data.token}`,
+          Accept: "*/*",
         },
       });
-  
+
       const userData = await userRes.json();
-  
+
       if (!userRes.ok) {
         throw new Error(userData.message || "Foydalanuvchi ma’lumotlarini olishda xatolik!");
       }
-  
-      localStorage.setItem("user", JSON.stringify(userData)); // ✅ `localStorage` ga userni saqlaymiz
-      setUser(userData); // ✅ `setUser` orqali userni holatda saqlaymiz
-  
+
+      localStorage.setItem("user", JSON.stringify(userData));
+      setUser(userData);
+
       alert("Tizimga muvaffaqiyatli kirdingiz!");
       navigate("/");
     } catch (err) {
@@ -61,7 +71,7 @@ const Login = ({ setUser }) => {
       setLoading(false);
     }
   };
-  
+
   return (
     <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
       <div className="card p-4 shadow-lg" style={{ maxWidth: "400px", width: "100%" }}>
@@ -87,7 +97,12 @@ const Login = ({ setUser }) => {
           required
         />
 
-        <button className="btn btn-primary w-100" onClick={handleLogin} disabled={loading}>
+        <button
+          className="btn w-100"
+          onClick={handleLogin}
+          disabled={loading}
+          style={{ backgroundColor: "#3E3F5B", color: "#fff" }}
+        >
           {loading ? "Yuklanmoqda..." : "Login"}
         </button>
       </div>

@@ -7,9 +7,19 @@ const Register = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  // Email validatsiya qilish uchun regex
+  const isValidEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
   const handleSendOtp = async () => {
     if (!email.trim()) {
       setError("Iltimos, email kiriting!");
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      setError("Email noto‘g‘ri formatda!");
       return;
     }
 
@@ -52,7 +62,12 @@ const Register = () => {
           required
         />
 
-        <button className="btn btn-primary w-100" onClick={handleSendOtp} disabled={loading}>
+        <button
+          className="btn w-100"
+          onClick={handleSendOtp}
+          disabled={loading}
+          style={{ backgroundColor: "#3E3F5B", color: "#fff" }}
+        >
           {loading ? "Yuborilmoqda..." : "OTP yuborish"}
         </button>
       </div>
