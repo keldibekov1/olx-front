@@ -54,41 +54,44 @@ const Navbar = ({ user, setUser }) => {
         </h1>
 
         {/* 🔥 Type'lar joylashuvi */}
-        <div className="d-flex">
-          {types.map((type) => (
-            <div key={type.id} className="position-relative">
-              <button
-                className="btn btn-link text-white me-3"
-                onClick={() => setActiveType(activeType === type.id ? null : type.id)}
-              >
-                {type.name}
-              </button>
+{user && (
+  <div className="d-flex">
+    {types.map((type) => (
+      <div key={type.id} className="position-relative">
+        <button
+          className="btn btn-link text-white me-3"
+          onClick={() => setActiveType(activeType === type.id ? null : type.id)}
+        >
+          {type.name}
+        </button>
 
-              {/* 🔥 Kategoriyalar chiqishi */}
-              {activeType === type.id && (
-                <div
-                  className="position-absolute bg-light shadow rounded p-2"
-                  style={{ top: "40px", left: 0, minWidth: "150px" }}
+        {/* 🔥 Kategoriyalar chiqishi */}
+        {activeType === type.id && (
+          <div
+            className="position-absolute bg-light shadow rounded p-2"
+            style={{ top: "40px", left: 0, minWidth: "150px" }}
+          >
+            {type.categories.length > 0 ? (
+              type.categories.map((category) => (
+                <p
+                  key={category.id}
+                  className="m-0 p-2 text-dark"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => navigate(`/category/${category.id}`)}
                 >
-                  {type.categories.length > 0 ? (
-                    type.categories.map((category) => (
-                      <p
-                        key={category.id}
-                        className="m-0 p-2 text-dark"
-                        style={{ cursor: "pointer" }}
-                        onClick={() => navigate(`/category/${category.id}`)}
-                      >
-                        {category.name}
-                      </p>
-                    ))
-                  ) : (
-                    <p className="m-0 p-2 text-muted">Kategoriya yo‘q</p>
-                  )}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+                  {category.name}
+                </p>
+              ))
+            ) : (
+              <p className="m-0 p-2 text-muted">Kategoriya yo‘q</p>
+            )}
+          </div>
+        )}
+      </div>
+    ))}
+  </div>
+)}
+
 
         {/* 🔥 Login, Logout, Register va Savat */}
         <div className="d-flex align-items-center">
