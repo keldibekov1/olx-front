@@ -61,15 +61,15 @@ const ProductDetail = () => {
   const handleCommentSubmit = async () => {
     if (isCommenting || !comment.trim()) return;
     setIsCommenting(true);
-  
+
     try {
       const token = localStorage.getItem("token");
-      const user = JSON.parse(localStorage.getItem("user")); // User ma’lumotlarini olish
+      const user = JSON.parse(localStorage.getItem("user"));
       if (!token || !user) {
         alert("Iltimos, avval tizimga kiring!");
         return;
       }
-  
+
       const res = await axios.post(
         "https://keldibekov.online/comments",
         { productId: id, text: comment, star },
@@ -80,20 +80,20 @@ const ProductDetail = () => {
           },
         }
       );
-  
+
       const newComment = {
         ...res.data,
         user: {
-          firstname: user.firstname, // Yangi izohga user ismini qo‘shamiz
+          firstname: user.firstname,
           lastname: user.lastname,
         },
       };
-  
+
       setProduct((prev) => ({
         ...prev,
         comments: [...prev.comments, newComment],
       }));
-  
+
       setComment("");
       setStar(5);
     } catch (error) {
@@ -102,7 +102,6 @@ const ProductDetail = () => {
       setIsCommenting(false);
     }
   };
-  
 
   if (loading) return <h2 style={{ textAlign: "center" }}>Yuklanmoqda...</h2>;
   if (error) return <h2 style={{ textAlign: "center", color: "red" }}>{error}</h2>;
@@ -121,6 +120,16 @@ const ProductDetail = () => {
       <p style={{ fontSize: "18px", color: "#333" }}>🎨 Rang: {product.color?.name}</p>
       <p style={{ fontSize: "18px", fontWeight: "bold", color: "#222" }}>
         💰 Narx: <span style={{ textDecoration: product.skidka ? "line-through" : "none" }}>${product.price}</span> {product.skidka ? `→ $${product.discountedPrice}` : ""}
+      </p>
+
+      {/* Yangi qism: Product haqida batafsil ma'lumot */}
+      <p style={{ fontSize: "18px", color: "#555", marginTop: "10px" }}>
+        📝 <strong>Tavsif:</strong> {product.description}
+      </p>
+
+      {/* Yangi qism: Mahsulot egasi haqida */}
+      <p style={{ fontSize: "18px", color: "#555", marginTop: "10px" }}>
+        👤 <strong>Mahsulot egasi:</strong> {product.user?.firstname} {product.user?.lastname} ({product.user?.email})
       </p>
 
       <div style={{ marginTop: "20px", textAlign: "center" }}>
